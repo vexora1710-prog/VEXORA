@@ -6,7 +6,7 @@ React + Vite + Tailwind + Framer Motion + React Three Fiber, with a Node/Express
 2. `cp .env.example .env`  (Windows PowerShell: `copy .env.example .env`)
 3. `npm run dev`  → site at http://localhost:5173, API at http://localhost:5000
 
-Project enquiries use the existing SMTP settings (without SMTP, submissions are written to `server/submissions.jsonl`). Payment notifications use Resend.
+Project enquiries use SMTP when configured, or Resend with `RESEND_API_KEY` and `RESEND_FROM_EMAIL`. Payment notifications use the same Resend settings. Without either mail provider, local submissions are written to `server/submissions.jsonl`; Vercel requires a configured mail provider because its filesystem is ephemeral.
 
 ## Payments
 The payment API requires a persistent PostgreSQL database, Razorpay credentials, and an admin password. Until configured, payment routes return an unavailable response; no demo or simulated payment is used.

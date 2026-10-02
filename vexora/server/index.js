@@ -10,7 +10,7 @@ import { fileURLToPath } from 'node:url'
 import { installPaymentRoutes } from './payments.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
-const { PORT = 5000, CLIENT_ORIGIN = 'http://localhost:5173', MAIL_TO = 'vexora1710@gmail.com', SMTP_HOST, SMTP_PORT = 465, SMTP_USER, SMTP_PASS } = process.env
+const { PORT = 5000, CLIENT_ORIGIN = 'http://localhost:5173', MAIL_TO = 'vexora1710@gmail.com', SMTP_HOST, SMTP_PORT = 465, SMTP_USER, SMTP_PASS, RESEND_API_KEY, RESEND_FROM_EMAIL } = process.env
 const app = express()
 app.set('trust proxy', 1)
 app.use(helmet({ contentSecurityPolicy: false }))
@@ -21,6 +21,7 @@ app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeader
 
 const looksLikePlaceholder = value => typeof value !== 'string' || !value.trim() || /your-|example|placeholder|replace/i.test(value)
 const hasRealSmtpConfig = !looksLikePlaceholder(SMTP_HOST) && !looksLikePlaceholder(SMTP_USER) && !looksLikePlaceholder(SMTP_PASS)
+const hasRealResendConfig = !looksLikePlaceholder(RESEND_API_KEY) && !looksLikePlaceholder(RESEND_FROM_EMAIL)
 const transporter = hasRealSmtpConfig
   ? nodemailer.createTransport({ host: SMTP_HOST, port: Number(SMTP_PORT), secure: Number(SMTP_PORT) === 465, auth: { user: SMTP_USER, pass: SMTP_PASS } }) : null
 const clean = (v, n = 2000) => String(v ?? '').replace(/[\u0000-\u0008\u000B\u000C\u000E-\u001F]/g, '').trim().slice(0, n)
@@ -42,6 +43,13 @@ function handler(kind, fields, subjectOf) {
     try {
       if (transporter) {
         await transporter.sendMail({ from: `"VEXORA Website" <${SMTP_USER}>`, to: MAIL_TO, replyTo: d.email, subject: subjectOf(d), text, html })
+      } else if (hasRealResendConfig) {
+        const response = await fetch('https://api.resend.com/emails', {
+          method: 'POST',
+          headers: { Authorization: `Bearer ${RESEND_API_KEY}`, 'Content-Type': 'application/json' },
+          body: JSON.stringify({ from: RESEND_FROM_EMAIL, to: [MAIL_TO], reply_to: d.email, subject: subjectOf(d), text, html })
+        })
+        if (!response.ok) throw new Error(`Resend email failed with status ${response.status}`)
       } else {
         if (!process.env.VERCEL) {
           saveSubmission(kind, d)
