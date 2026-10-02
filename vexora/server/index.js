@@ -43,16 +43,24 @@ function handler(kind, fields, subjectOf) {
       if (transporter) {
         await transporter.sendMail({ from: `"VEXORA Website" <${SMTP_USER}>`, to: MAIL_TO, replyTo: d.email, subject: subjectOf(d), text, html })
       } else {
-        saveSubmission(kind, d)
-        console.warn('[VEXORA] SMTP not configured — submission saved to server/submissions.jsonl')
+        if (!process.env.VERCEL) {
+          saveSubmission(kind, d)
+          console.warn('[VEXORA] SMTP not configured — submission saved to server/submissions.jsonl')
+        } else {
+          console.warn('[VEXORA] SMTP not configured — submission could not be persisted on Vercel')
+        }
         return res.status(503).json({ error: 'Email delivery is not configured. Please try again later.' })
       }
       res.json({ ok: true })
     } catch (e) {
       console.error('[VEXORA] Mail delivery failed:', e)
-      saveSubmission(kind, d)
-      console.warn('[VEXORA] Submission saved to server/submissions.jsonl as fallback')
-      res.status(502).json({ error: 'Your request was saved, but email delivery failed. Please try again later.' })
+      if (!process.env.VERCEL) {
+        saveSubmission(kind, d)
+        console.warn('[VEXORA] Submission saved to server/submissions.jsonl as fallback')
+        res.status(502).json({ error: 'Your request was saved, but email delivery failed. Please try again later.' })
+      } else {
+        res.status(502).json({ error: 'Email delivery failed. Please try again later.' })
+      }
     }
   }
 }
@@ -63,4 +71,6 @@ installPaymentRoutes(app)
 
 const dist = path.join(__dirname, '../dist')
 if (fs.existsSync(dist)) { app.use(express.static(dist)); app.get('*', (_, res) => res.sendFile(path.join(dist, 'index.html'))) }
-app.listen(PORT, () => console.log(`VEXORA API on http://localhost:${PORT}${transporter ? '' : ' (SMTP not configured: dev mode)'}`))
+if (!process.env.VERCEL) app.listen(PORT, () => console.log(`VEXORA API on http://localhost:${PORT}${transporter ? '' : ' (SMTP not configured: dev mode)'}`))
+
+export default app
