@@ -98,7 +98,7 @@ export function Contact() {
           <span className="contact-link__text">{PHONE}</span>
         </a>
       </div>
-      <ul className="mt-8 flex flex-wrap gap-3" aria-label="Social links"><li><a href="https://www.linkedin.com/in/vexora-undefined-98b73a440/?isSelfProfile=true" target="_blank" rel="noreferrer" className="glass rounded-full px-4 py-2 text-sm text-slate-400 hover:text-white transition">LinkedIn</a></li></ul></Reveal>
+    </Reveal>
     <Reveal delay={.1}><ContactForm /></Reveal></div></Sec>
 }
 export function CTA({ onStart }) {
