@@ -1,6 +1,6 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useRef } from 'react'
-import { ArrowRight, Check, Instagram, Mail, Phone } from 'lucide-react'
+import { ArrowRight, Check, Instagram, Linkedin, Mail, Phone } from 'lucide-react'
 import { TECH, PILLARS, SERVICES, WHY, PROJECTS, PROCESS, PLANS, EMAIL, PHONE, PHONE_TEL } from '../data/content'
 import Reveal from '../animations/Reveal'
 import Tilt from '../components/Tilt'
@@ -98,7 +98,7 @@ export function Contact() {
           <span className="contact-link__text">{PHONE}</span>
         </a>
       </div>
-      <ul className="mt-8 flex flex-wrap gap-3" aria-label="Social links">{['LinkedIn', 'Instagram'].map(s => <li key={s}><a href={s === 'LinkedIn' ? 'https://www.linkedin.com/in/vexora-undefined-98b73a440/?isSelfProfile=true' : 'https://www.instagram.com/_.vexora._1710/?hl=en'} target="_blank" rel="noreferrer" className="glass rounded-full px-4 py-2 text-sm text-slate-400 hover:text-white transition">{s}</a></li>)}</ul></Reveal>
+      <ul className="mt-8 flex flex-wrap gap-3" aria-label="Social links"><li><a href="https://www.linkedin.com/in/vexora-undefined-98b73a440/?isSelfProfile=true" target="_blank" rel="noreferrer" className="glass rounded-full px-4 py-2 text-sm text-slate-400 hover:text-white transition">LinkedIn</a></li></ul></Reveal>
     <Reveal delay={.1}><ContactForm /></Reveal></div></Sec>
 }
 export function CTA({ onStart }) {
@@ -114,9 +114,14 @@ export function Footer() {
   return <footer className="border-t border-white/10 pt-16 pb-8"><div className="mx-auto max-w-7xl px-5">
     <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-10">
       <div><Logo /><p className="mt-4 text-sm text-slate-400 max-w-xs">Digital experiences. Intelligent solutions. Built for what's next.</p>
-        <a href="https://www.instagram.com/vexora.nextech?stkn=MWhpeG5hbXZrd2w2Zg==" target="_blank" rel="noopener noreferrer" aria-label="Visit VEXORA on Instagram" title="VEXORA on Instagram" className="glass mt-5 inline-flex h-11 w-11 items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-cyan/50 hover:text-cyan hover:shadow-[0_0_24px_rgba(110,215,255,.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan">
-          <Instagram size={19} aria-hidden="true" />
-        </a>
+        <div className="mt-5 flex flex-wrap items-center gap-3">
+          <a href="https://www.instagram.com/vexora.nextech?stkn=MWhpeG5hbXZrd2w2Zg==" target="_blank" rel="noopener noreferrer" aria-label="Visit VEXORA on Instagram" title="VEXORA on Instagram" className="glass inline-flex h-11 w-11 items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-cyan/50 hover:text-cyan hover:shadow-[0_0_24px_rgba(110,215,255,.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan">
+            <Instagram size={19} aria-hidden="true" />
+          </a>
+          <a href="https://www.linkedin.com/in/vishal-founder-of-vexora-98b73a440/?isSelfProfile=true" target="_blank" rel="noopener noreferrer" aria-label="Visit VEXORA on LinkedIn" title="VEXORA on LinkedIn" className="glass inline-flex h-11 w-11 items-center justify-center rounded-full text-slate-400 transition-all duration-200 hover:-translate-y-1 hover:border-cyan/50 hover:text-cyan hover:shadow-[0_0_24px_rgba(110,215,255,.2)] focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan">
+            <Linkedin size={19} aria-hidden="true" />
+          </a>
+        </div>
       </div>
       {col('Company', [['About', '#about'], ['Services', '#services'], ['Work', '#work'], ['Process', '#process'], ['Contact', '#contact']])}
       {col('Services', ['Website Development', 'Web Applications', 'AI Solutions', 'UI/UX Design', 'E-Commerce', 'Dashboards'].map(s => [s, '#services']))}
