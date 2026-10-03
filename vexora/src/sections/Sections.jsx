@@ -1,7 +1,7 @@
 import { motion, useScroll, useSpring } from 'framer-motion'
 import { useRef } from 'react'
-import { ArrowRight, Check, Mail } from 'lucide-react'
-import { TECH, PILLARS, SERVICES, WHY, PROJECTS, PROCESS, PLANS, EMAIL } from '../data/content'
+import { ArrowRight, Check, Mail, Phone } from 'lucide-react'
+import { TECH, PILLARS, SERVICES, WHY, PROJECTS, PROCESS, PLANS, EMAIL, PHONE, PHONE_TEL } from '../data/content'
 import Reveal from '../animations/Reveal'
 import Tilt from '../components/Tilt'
 import Icon from '../components/Icon'
@@ -74,21 +74,30 @@ export function Process() {
       {PROCESS.map(([t, d], i) => <Reveal key={t} className="relative pb-12 last:pb-0"><span className="absolute -left-[34px] top-1 grid place-items-center h-6 w-6 rounded-full bg-ink border border-violet text-[10px] text-cyan">{i + 1}</span>
         <p className="eyebrow">Step 0{i + 1}</p><h3 className="text-2xl font-bold text-white mt-1">{t}</h3><p className="mt-1 text-slate-400">{d}</p></Reveal>)}</ol></Sec>
 }
-export function Pricing({ onStart }) {
+export function Pricing({ onStart, onPayPlan }) {
   return <Sec id="pricing"><Head eyebrow="Pricing" title="SIMPLE. TRANSPARENT. FLEXIBLE." />
     <div className="grid lg:grid-cols-3 gap-6 items-stretch">{PLANS.map((p, i) => <Reveal key={p.name} delay={i * .1} className="h-full"><Tilt max={4} className={`h-full rounded-3xl p-8 flex flex-col glass ${p.hot ? 'border-violet/60 shadow-[0_0_60px_-15px_rgba(139,92,246,.6)]' : ''}`}>
       {p.hot && <span className="self-start text-[10px] tracking-widest uppercase bg-violet/30 text-white rounded-full px-3 py-1 mb-3">Most popular</span>}
       <h3 className="font-display tracking-widest text-slate-400">{p.name}</h3>
       <p className="mt-3 text-sm text-slate-500">Starting from</p><p className="text-4xl font-bold text-white font-display">{p.price}</p><p className="mt-2 text-slate-400">{p.note}</p>
       <ul className="mt-6 space-y-2.5 flex-1">{p.items.map(x => <li key={x} className="flex gap-2 text-sm"><Check size={16} className="text-cyan mt-0.5 shrink-0" />{x}</li>)}</ul>
-      <button onClick={() => onStart(`Plan: ${p.name}`)} className={`btn mt-8 ${p.hot ? 'btn-primary' : 'btn-ghost'}`}>{p.cta}</button></Tilt></Reveal>)}</div>
+      <button onClick={() => p.payable ? onPayPlan(p) : onStart(`Plan: ${p.name}`)} className={`btn mt-8 ${p.hot ? 'btn-primary' : 'btn-ghost'}`}>{p.cta}</button></Tilt></Reveal>)}</div>
     <p className="mt-8 text-center text-sm text-slate-500">Final pricing depends on project requirements and scope.</p></Sec>
 }
 export function Contact() {
   return <Sec id="contact"><div className="grid lg:grid-cols-2 gap-12">
     <Reveal><p className="eyebrow">Contact</p><h2 className="mt-3 text-4xl sm:text-5xl font-bold text-white leading-tight">LET'S BUILD SOMETHING GREAT.</h2>
       <p className="mt-5 text-slate-400 text-lg">Have an idea? Tell us what you want to build.</p>
-      <a href={`mailto:${EMAIL}`} className="mt-8 inline-flex items-center gap-3 text-white hover:text-cyan transition"><Mail className="text-violet" /> {EMAIL}</a>
+      <div className="mt-8 flex flex-col gap-4">
+        <a href={`mailto:${EMAIL}`} className="contact-link">
+          <span className="contact-link__icon"><Mail size={18} /></span>
+          <span className="contact-link__text">{EMAIL}</span>
+        </a>
+        <a href={`tel:${PHONE_TEL}`} className="contact-link">
+          <span className="contact-link__icon"><Phone size={18} /></span>
+          <span className="contact-link__text">{PHONE}</span>
+        </a>
+      </div>
       <ul className="mt-8 flex flex-wrap gap-3" aria-label="Social links">{['LinkedIn', 'Instagram'].map(s => <li key={s}><a href={s === 'LinkedIn' ? 'https://www.linkedin.com/in/vexora-undefined-98b73a440/?isSelfProfile=true' : 'https://www.instagram.com/_.vexora._1710/?hl=en'} target="_blank" rel="noreferrer" className="glass rounded-full px-4 py-2 text-sm text-slate-400 hover:text-white transition">{s}</a></li>)}</ul></Reveal>
     <Reveal delay={.1}><ContactForm /></Reveal></div></Sec>
 }
@@ -107,7 +116,7 @@ export function Footer() {
       <div><Logo /><p className="mt-4 text-sm text-slate-400 max-w-xs">Digital experiences. Intelligent solutions. Built for what's next.</p></div>
       {col('Company', [['About', '#about'], ['Services', '#services'], ['Work', '#work'], ['Process', '#process'], ['Contact', '#contact']])}
       {col('Services', ['Website Development', 'Web Applications', 'AI Solutions', 'UI/UX Design', 'E-Commerce', 'Dashboards'].map(s => [s, '#services']))}
-      {col('Contact', [[EMAIL, `mailto:${EMAIL}`]])}</div>
+      {col('Contact', [[EMAIL, `mailto:${EMAIL}`], [PHONE, `tel:${PHONE_TEL}`]])}</div>
     <div className="mt-12 pt-6 border-t border-white/5 flex flex-wrap justify-between gap-3 text-xs text-slate-500"><p>© 2026 VEXORA. All rights reserved.</p>
       <p className="flex gap-5"><a href="#" className="hover:text-white">Privacy Policy</a><a href="#" className="hover:text-white">Terms &amp; Conditions</a></p></div></div></footer>
 }

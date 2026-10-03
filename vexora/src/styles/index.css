@@ -4,8 +4,6 @@ body { @apply bg-ink text-slate-200 font-sans antialiased; background: radial-gr
 h1,h2,h3 { @apply font-display; }
 @layer components {
 .glass { @apply bg-white/[0.04] backdrop-blur-xl border border-white/10; }
-.payment-shell { background: radial-gradient(ellipse at 76% 10%, rgba(45, 176, 210, .11), transparent 36%), radial-gradient(ellipse at 10% 72%, rgba(91, 119, 255, .09), transparent 34%); }
-.payment-glow { box-shadow: 0 0 0 1px rgba(105, 215, 242, .16), 0 18px 70px -34px rgba(62, 194, 225, .35); }
 .glow:hover { box-shadow: 0 0 0 1px rgba(121, 209, 255, 0.6), 0 10px 50px -12px rgba(121, 209, 255, 0.42); }
 .grad-text { @apply bg-clip-text text-transparent bg-gradient-to-r from-cyan via-sky-200 to-azure; }
 .btn { @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 min-h-[44px] text-sm font-semibold transition focus-visible:outline focus-visible:outline-2 focus-visible:outline-cyan; }
@@ -13,6 +11,10 @@ h1,h2,h3 { @apply font-display; }
 .btn-ghost { @apply glass text-white hover:bg-white/10; }
 .eyebrow { @apply text-xs tracking-[.3em] uppercase text-cyan/90 font-semibold; }
 .input { @apply w-full rounded-xl bg-white/5 border border-white/10 px-4 py-3 text-sm text-white placeholder:text-slate-500 focus:outline-none focus:border-violet; }
+.contact-link { @apply inline-flex w-fit items-center gap-3 rounded-full border border-white/10 bg-white/[0.03] px-3 py-2.5 text-white transition-all duration-200 hover:border-cyan/40 hover:bg-white/[0.06]; }
+.contact-link__icon { @apply grid h-10 w-10 place-items-center rounded-xl border border-white/10 bg-slate-950/50 text-violet shadow-[inset_0_0_0_1px_rgba(255,255,255,0.04)]; }
+.contact-link__text { @apply text-sm sm:text-base font-medium tracking-[0.02em] text-slate-100; }
+.contact-link:hover .contact-link__icon { @apply text-cyan; }
 .grid-bg { background-image: linear-gradient(rgba(255,255,255,.035) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,.035) 1px, transparent 1px); background-size: 56px 56px; mask-image: radial-gradient(ellipse at center, #000 30%, transparent 75%); }
 .hero-word {
   font-size: clamp(6rem, 18vw, 26rem);

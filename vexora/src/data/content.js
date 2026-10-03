@@ -1,4 +1,6 @@
 export const EMAIL = 'vexora1710@gmail.com'
+export const PHONE = '+91 84386 38823'
+export const PHONE_TEL = '+918438638823'
 export const NAV = [['home','Home'],['about','About'],['services','Services'],['work','Work'],['process','Process'],['pricing','Pricing'],['contact','Contact']]
 export const TECH = ['React','Next.js','Node.js','AI','Cloud','Databases','UI/UX','Automation']
 export const PILLARS = [['01','Creative Design'],['02','Smart Technology'],['03','Scalable Solutions']]
@@ -27,8 +29,8 @@ export const PROCESS = [
   ['GROW','Continue improving and maintaining the product.']
 ]
 export const PLANS = [
-  { name:'STARTER', price:'₹4,999', note:'For simple websites.', cta:'Start Starter Project', items:['Up to 5 pages','Responsive design','Contact form','Basic SEO','Deployment'] },
-  { name:'BUSINESS', price:'₹12,999', note:'For growing businesses.', cta:'Build My Business Website', hot:true, items:['Up to 10 pages','Premium UI/UX','Database integration','Admin features','SEO','Deployment'] },
+  { name:'STARTER', price:'₹4,999', note:'For simple websites.', cta:'Pay for This Plan', payable:true, items:['Up to 5 pages','Responsive design','Contact form','Basic SEO','Deployment'] },
+  { name:'BUSINESS', price:'₹12,999', note:'For growing businesses.', cta:'Pay for This Plan', payable:true, hot:true, items:['Up to 10 pages','Premium UI/UX','Database integration','Admin features','SEO','Deployment'] },
   { name:'AI / CUSTOM', price:'₹20,000+', note:'For advanced digital products.', cta:'Discuss My Project', items:['AI integration','Custom functionality','Authentication','Database','Dashboard','API integrations','Deployment'] }
 ]
 export const PROJECTS = [
@@ -47,7 +49,7 @@ export const PROJECTS = [
   { id:4, name:'E-Commerce Experience', cat:'E-Commerce', hue:[320,260], preview:'https://images.unsplash.com/photo-1524758631624-e2822e304c36?auto=format&fit=crop&w=1200&q=80', desc:'A modern online store with fast browsing, cart and checkout flow.', tech:['React','Node.js','MongoDB'],
     problem:'Small shops need an online store that feels premium without a heavy setup.',
     solution:'A catalogue-driven storefront with search, filters, cart and an order management panel.',
-    features:['Product catalogue and filters','Cart and checkout flow','Order management','Admin dashboard','Payment gateway integration (third-party)'] },
+    features:['Product catalogue and filters','Cart and checkout flow','Order management','Admin dashboard'] },
   { id:5, name:'AI Business Assistant', cat:'AI Solution', hue:[210,170], preview:'https://images.unsplash.com/photo-1556157382-97eda2d62296?auto=format&fit=crop&w=1200&q=80', desc:'A chat assistant that answers customer questions from a business’s own information.', tech:['React','Express','LLM API'],
     problem:'Businesses answer the same customer questions repeatedly.',
     solution:'An embeddable assistant trained on business FAQs and service details, with human hand-off.',

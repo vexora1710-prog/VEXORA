@@ -19,7 +19,7 @@ export default function Navbar({ onStart }) {
               {label}{active === id && <motion.span layoutId="nav-dot" className="absolute left-1/2 -translate-x-1/2 bottom-0 h-1 w-6 rounded-full bg-gradient-to-r from-violet to-cyan" />}
             </a></li>))}
         </ul>
-        <button onClick={onStart} className="btn btn-primary hidden lg:inline-flex">Start a Project <ArrowRight size={16} /></button>
+        <div className="hidden items-center gap-4 lg:flex"><button onClick={onStart} className="btn btn-primary">Start a Project <ArrowRight size={16} /></button></div>
         <button className="lg:hidden p-2 text-white" aria-label={open ? 'Close menu' : 'Open menu'} aria-expanded={open} onClick={() => setOpen(!open)}>{open ? <X /> : <Menu />}</button>
       </nav>
       <AnimatePresence>{open && (

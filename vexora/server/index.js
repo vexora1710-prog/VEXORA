@@ -7,7 +7,6 @@ import nodemailer from 'nodemailer'
 import fs from 'node:fs'
 import path from 'node:path'
 import { fileURLToPath } from 'node:url'
-import { installPaymentRoutes } from './payments.js'
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const { PORT = 5000, CLIENT_ORIGIN = 'http://localhost:5173', MAIL_TO = 'vexora1710@gmail.com', SMTP_HOST, SMTP_PORT = 465, SMTP_USER, SMTP_PASS, RESEND_API_KEY, RESEND_FROM_EMAIL } = process.env
@@ -16,7 +15,6 @@ app.set('trust proxy', 1)
 app.use(helmet({ contentSecurityPolicy: false }))
 app.use(cors({ origin: CLIENT_ORIGIN.split(',') }))
 app.use(express.json({ limit: '20kb' }))
-app.use('/api/admin/login', rateLimit({ windowMs: 15 * 60 * 1000, limit: 8, skipSuccessfulRequests: true, standardHeaders: true, legacyHeaders: false }))
 app.use('/api', rateLimit({ windowMs: 15 * 60 * 1000, limit: 120, standardHeaders: true, legacyHeaders: false, message: { error: 'Too many requests. Please try again later.' } }))
 
 const looksLikePlaceholder = value => typeof value !== 'string' || !value.trim() || /your-|example|placeholder|replace/i.test(value)
@@ -38,8 +36,15 @@ function handler(kind, fields, subjectOf) {
     if (!d.name || !/^\S+@\S+\.\S+$/.test(d.email)) return res.status(400).json({ error: 'Please provide a valid name and email.' })
     if (kind === 'contact' && d.message.length < 10) return res.status(400).json({ error: 'Message is too short.' })
     if (kind === 'project' && d.requirements.length < 10) return res.status(400).json({ error: 'Please describe your requirements.' })
-    const text = fields.map(k => `${k}: ${d[k] || '-'}`).join('\n')
-    const html = `<h2>${kind === 'project' ? 'New project request' : 'New contact message'}</h2>` + fields.map(k => `<p><b>${k}:</b> ${esc(d[k] || '-')}</p>`).join('')
+    if (kind === 'payment') {
+      if (!['STARTER', 'BUSINESS'].includes(d.plan)) return res.status(400).json({ error: 'Please select a valid plan.' })
+      if (!/^\d+(?:\.\d{1,2})?$/.test(d.amount) || Number(d.amount) <= 0 || Number(d.amount) > 10000000) {
+        return res.status(400).json({ error: 'Please enter a valid payment amount in INR.' })
+      }
+    }
+    const text = `${kind === 'payment' ? 'PAYMENT REPORT — NOT YET VERIFIED\n\n' : ''}${fields.map(k => `${k}: ${d[k] || '-'}`).join('\n')}`
+    const heading = kind === 'project' ? 'New project request' : kind === 'payment' ? 'UPI payment reported — verification required' : 'New contact message'
+    const html = `<h2>${heading}</h2>${kind === 'payment' ? '<p><strong>Reported only — verify the transfer and amount against the bank statement before confirming payment.</strong></p>' : ''}` + fields.map(k => `<p><b>${k}:</b> ${esc(d[k] || '-')}</p>`).join('')
     try {
       if (transporter) {
         await transporter.sendMail({ from: `"VEXORA Website" <${SMTP_USER}>`, to: MAIL_TO, replyTo: d.email, subject: subjectOf(d), text, html })
@@ -57,7 +62,12 @@ function handler(kind, fields, subjectOf) {
         } else {
           console.warn('[VEXORA] SMTP not configured — submission could not be persisted on Vercel')
         }
-        return res.status(503).json({ error: 'Email delivery is not configured. Please try again later.' })
+        const message = kind === 'payment'
+          ? process.env.VERCEL
+            ? 'Email delivery is not configured, so this payment report could not be saved. Please contact VEXORA directly.'
+            : 'Email delivery is not configured. The report was saved locally, but no email was sent.'
+          : 'Email delivery is not configured. Please try again later.'
+        return res.status(503).json({ error: message })
       }
       res.json({ ok: true })
     } catch (e) {
@@ -74,8 +84,8 @@ function handler(kind, fields, subjectOf) {
 }
 app.post('/api/project-request', handler('project', ['name', 'email', 'phone', 'business', 'businessType', 'projectType', 'budget', 'requirements', 'reference'], d => `New project request: ${d.projectType || 'General'} — ${d.name}`))
 app.post('/api/contact', handler('contact', ['name', 'email', 'phone', 'projectType', 'message'], d => `New message from ${d.name}`))
+app.post('/api/payment-report', handler('payment', ['name', 'email', 'phone', 'upiId', 'plan', 'amount'], d => `UPI payment reported — ${d.name} — ${d.plan}`))
 app.get('/api/health', (_, res) => res.json({ ok: true }))
-installPaymentRoutes(app)
 
 const dist = path.join(__dirname, '../dist')
 if (fs.existsSync(dist)) { app.use(express.static(dist)); app.get('*', (_, res) => res.sendFile(path.join(dist, 'index.html'))) }

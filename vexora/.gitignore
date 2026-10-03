@@ -5,3 +5,4 @@ server/submissions.jsonl
 
 .vercel
 .env*
+!.env.example
